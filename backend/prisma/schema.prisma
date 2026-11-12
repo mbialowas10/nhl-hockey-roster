@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Team {
+  id      Int      @id @default(autoincrement())
+  name    String
+  code    String   @unique
+  city    String
+  players Player[]
+}
+
+model Player {
+  id       Int    @id @default(autoincrement())
+  name     String
+  number   Int
+  position String
+  teamId   Int
+  team     Team   @relation(fields: [teamId], references: [id], onDelete: Restrict)
+
+  @@unique([teamId, number])
+}
