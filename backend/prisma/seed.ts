@@ -32,3 +32,35 @@ async function main() {
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());
+
+// DELETE MANY: remove all coaches for a team.
+// await prisma.coach.deleteMany({ where: { teamId: 1 } });
+
+await prisma.coach.create({
+  data: {
+    name: "Michael Bialowas",
+    role: "HEAD",
+    team: { connect: { id: 2 } },
+  },
+});
+
+// NESTED CREATE: one Prisma call can create the entire staff.
+// Use only when a team does not already have assigned coaches.
+
+await prisma.team.update({
+  where: { id: 1 },
+  data: {
+    coaches: {
+      create: [
+        { name: "Coach A", role: "HEAD" },
+        { name: "Coach B", role: "ASSISTANT_1" },
+        { name: "Coach C", role: "ASSISTANT_2" },
+        { name: "Coach D", role: "SAFETY" },
+      ],
+
+    },
+
+  },
+
+});
+
