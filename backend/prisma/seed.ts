@@ -28,7 +28,34 @@ async function main() {
       create: player,
     });
   }
+  
   console.log("Seed complete: example teams and players added.");
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());
+
+
+// await prisma.coach.deleteMany({where: {teamId: 1}});
+
+await prisma.coach.create({
+  data: {
+    name: "Kang",
+    role: "HEAD",
+    team: {connect: {id: 1}}
+  }
+});
+
+await prisma.team.update({
+  where: {id: 1},
+  data: {
+    coaches: {
+      create: [
+        {name:"Coach A", role: "HEAD"},
+        {name: "Coach B", role:" ASSISTANT_1"},
+        {name: "Coach C", role: "ASSISTANT_2"},
+        {name:"Coach D", role: "SAFETY"}
+      ],
+  },
+},
+
+})

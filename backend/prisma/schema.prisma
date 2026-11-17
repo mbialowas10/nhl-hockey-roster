@@ -6,6 +6,12 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+enum CoachRole{
+  HEAD
+  ASSISTANT_1
+  ASSISTANT_2
+  SAFETY
+}
 
 model Team {
   id      Int      @id @default(autoincrement())
@@ -13,6 +19,16 @@ model Team {
   code    String   @unique
   city    String
   players Player[]
+  coaches Coach[]
+}
+
+model Coach{
+  id Int @id @default(autoincrement())
+  name String
+  role CoachRole
+  teamId Int 
+  team Team @relation(fields: [teamId] ,references:[id], onDelete:Restrict )
+  //@@unique([teamId,role])
 }
 
 model Player {
